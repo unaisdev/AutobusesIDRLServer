@@ -19,7 +19,7 @@ public class Linea {
         String stringFile = "";
 
         try{
-            File file = new File("C:/Users/Unai Canales/Desktop/AutobusesIDRLServer/Rutas/" + nombre + ".json");
+            File file = new File("C:/Users/Unai Canales/Desktop/AutobusesIDRLServer/rutes/" + nombre + ".json");
 
             BufferedReader br = new BufferedReader(new FileReader(file));
 
