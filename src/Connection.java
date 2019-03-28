@@ -16,25 +16,28 @@ public class Connection implements Runnable {
     public void connectClient() {
         try{
 
-            InputStream inputStream = socket.getInputStream();
+            DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
+            DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
 
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-
-            OutputStream outputStream = socket.getOutputStream();
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream);
-
-            // Input
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try{
                         while (true){
-                            String aux;
-                            while ((aux = bufferedReader.readLine()) != null) {
+                            String msg;
+                            while (!(msg = dataInputStream.readUTF()).equals("")) {
                                 //Guardamos lo que nos dice el cliente en variable global
-                                clientMsg = aux;
-                                System.out.println("Cliente -> " + aux);
+
+                                /* AQUÍ ES DONDE DEBEREMOS CONTROLAR LO QUE NOS LLEGA DESDE EL CLIENTE,
+                                 * QUE NOS PEDIRÁ: PARADAS, RUTAS, Y AUTOBUSES.
+                                 * Y deberemos de crear un nuevo hilo para que se ejecute en segundo plano el envio de
+                                 * coordenadas a los clientes.
+                                 *
+                                 * EL HILO QUE SE ENCARGUE DE ENVIAR MENSAJES, debe ser accionado por un boton en la interfaz JavaFX
+                                 * */
+
+                                clientMsg = msg;
+                                System.out.println("MENSAJE ->  " + clientMsg);
                             }
                         }
                     }catch (IOException e) {
@@ -43,28 +46,6 @@ public class Connection implements Runnable {
                 }
             }).start();
 
-            // Ouuput
-            BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    int i = 0;
-                    while (true) {
-                        i++;
-                        try {
-                            try {
-                                bufferedWriter.write(clientMsg + "\n");
-                                bufferedWriter.flush();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            Thread.sleep(2000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }).start();
         }catch (IOException e) {
             System.err.println("Couldn't get I/O for the connection");
             System.exit(1);
