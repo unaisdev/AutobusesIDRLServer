@@ -8,6 +8,8 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
+    public Linea lineaA15 = new Linea("LineaA-15");
+
     public static void main(String[] args) {
 
         Server servidor = new Server();
