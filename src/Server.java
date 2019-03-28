@@ -15,8 +15,11 @@ public class Server implements Runnable {
             System.out.println("---- SERVER ON ----");
             while(true){
                 Socket clientSocket = serverSocket.accept();
+
                 DataOutputStream remoteOut = new DataOutputStream(clientSocket.getOutputStream());
                 MainController.clients.add(remoteOut);
+                System.out.println("---- Socket recogido ----");
+
                 //new Thread(new Connection(clientSocket)).start();
             }
 

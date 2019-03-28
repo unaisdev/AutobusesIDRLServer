@@ -38,14 +38,6 @@ public class MainController {
     @FXML
     private void initialize()
     {
-        tGLineas = new ToggleGroup();
-        tGAutobuses = new ToggleGroup();
-
-        tBLineaH25 = new ToggleButton();
-        tBLineaA15 = new ToggleButton();
-        tBAutobusCHR = new ToggleButton();
-        tBAutobusKLR = new ToggleButton();
-
         tBLineaH25.setToggleGroup(tGLineas);
         tBLineaH25.setUserData("Linea H-25");
         tBLineaA15.setToggleGroup(tGLineas);
