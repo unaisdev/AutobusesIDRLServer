@@ -1,9 +1,12 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Server implements Runnable {
 
+    public static List<Connection> clientsConnection = new ArrayList<Connection>();
     private static final int PORT_NUMBER = 7979;
     private ServerSocket serverSocket;
 
@@ -16,17 +19,27 @@ public class Server implements Runnable {
             while(true){
                 Socket clientSocket = serverSocket.accept();
 
-                DataOutputStream remoteOut = new DataOutputStream(clientSocket.getOutputStream());
-                MainController.clients.add(remoteOut);
                 System.out.println("---- Socket recogido ----");
 
-                //new Thread(new Connection(clientSocket)).start();
+                clientsConnection.add(new Connection(clientSocket));
             }
 
         } catch (IOException e) {
             System.out.println("Exception caught when trying to listen on port "
                     + PORT_NUMBER + " or listening for a connection");
             System.out.println(e.getMessage());
+        }
+    }
+
+    public static void broadcast(GeoPoint punto, Autobus autobus){
+        for (Connection conexionCli : Server.clientsConnection) {
+            try {
+                DataOutputStream remoteOut = new DataOutputStream(conexionCli.getSocket().getOutputStream());
+                System.out.println(autobus.getNombre() + " | " + punto.getLatitude() + ", " + punto.getLongitude());
+                remoteOut.writeUTF(autobus.getNombre() + " | " + punto.getLatitude() + ", " + punto.getLongitude());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

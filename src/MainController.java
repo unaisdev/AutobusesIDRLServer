@@ -12,7 +12,6 @@ import java.util.*;
 
 public class MainController {
 
-    public static  List<DataOutputStream> clients = new ArrayList<DataOutputStream>();
     private static ArrayList<Linea> lineas = new ArrayList<Linea>();
 
     @FXML
@@ -39,13 +38,13 @@ public class MainController {
     private void initialize()
     {
         tBLineaH25.setToggleGroup(tGLineas);
-        tBLineaH25.setUserData("Linea H-25");
+        tBLineaH25.setUserData("H - 25");
         tBLineaA15.setToggleGroup(tGLineas);
-        tBLineaA15.setUserData("Linea A-15");
+        tBLineaA15.setUserData("A - 15");
         tBAutobusCHR.setToggleGroup(tGAutobuses);
-        tBAutobusCHR.setUserData("Autobus CHR");
+        tBAutobusCHR.setUserData("AutobusCHR");
         tBAutobusKLR.setToggleGroup(tGAutobuses);
-        tBAutobusKLR.setUserData("Autobus CHR");
+        tBAutobusKLR.setUserData("AutobusKLR");
 
         tGLineas.selectedToggleProperty().addListener(new ChangeListener<Toggle>(){
             public void changed(ObservableValue<? extends Toggle> ov, Toggle old_toggle, Toggle new_toggle) {
@@ -78,18 +77,19 @@ public class MainController {
     private void lanzarAutobus()
     {
         System.out.println("BOTON PULSAO");
-        DataOutputStream dataOut = null;
 
-        for (Iterator i = clients.iterator(); i.hasNext(); ) {
-            dataOut = (DataOutputStream)(i.next());
+        for (Linea linea: Main.lineasUp) {
+            if(linea.getNombre().equals(tGLineas.getSelectedToggle().getUserData().toString())){
+                for (Autobus autobus: Main.autobusesUp) {
+                    if(autobus.getNombre().equals(tGAutobuses.getSelectedToggle().getUserData().toString())){
+                        new Thread(new SimulacionBus(linea, autobus)).start();
+                    }else{
+                        //TODO: TRATAMOS CUANDO EL AUTOBUS NO EXISTE EN EL ARRAY
 
-            try {
-                dataOut.writeUTF("BROADCAST TO CONNECTED HOSTS: /n " + getSelectedLineaAutobus());
-            }
-            catch (IOException x) {
-                System.out.println(x.getMessage() +
-                        ": Failed to broadcast to client.");
-                //server.removeFromClients(dataOut);
+                    }
+                }
+            }else{
+                //TODO: TRATAMOS CUANDO LA LINEA NO EXISTE EN EL ARRAY
             }
         }
     }
@@ -98,7 +98,7 @@ public class MainController {
         String selected = "";
 
         if(tBLineaA15.isSelected()){
-            selected = "LINEA: " + tBLineaA15.getText();
+            selected = "LINEA: " + tBLineaA15.getUserData();
         }else if(tBLineaH25.isSelected()){
             selected = "LINEA: " + tBLineaH25.getText();
         }

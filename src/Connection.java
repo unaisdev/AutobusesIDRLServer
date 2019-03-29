@@ -3,11 +3,13 @@ import java.lang.management.ThreadMXBean;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Connection implements Runnable {
 
-    private static Socket socket;
-    private String clientMsg = "";
+    private Socket socket;
+    private String msgCli = "";
 
     public Connection(Socket socket){
         this.socket = socket;
@@ -36,8 +38,8 @@ public class Connection implements Runnable {
                                  * EL HILO QUE SE ENCARGUE DE ENVIAR MENSAJES, debe ser accionado por un boton en la interfaz JavaFX
                                  * */
 
-                                clientMsg = msg;
-                                System.out.println("MENSAJE ->  " + clientMsg);
+                                msgCli = msg;
+                                System.out.println("MENSAJE ->  " + msgCli);
                             }
                         }
                     }catch (IOException e) {
@@ -50,6 +52,14 @@ public class Connection implements Runnable {
             System.err.println("Couldn't get I/O for the connection");
             System.exit(1);
         }
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public void setSocket(Socket socket) {
+        socket = socket;
     }
 
     @Override
