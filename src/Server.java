@@ -8,7 +8,7 @@ public class Server implements Runnable {
 
     public static List<Connection> clientsConnection = new ArrayList<Connection>();
     private static final int PORT_NUMBER = 7979;
-    private ServerSocket serverSocket;
+    private static ServerSocket serverSocket;
 
     @Override
     public void run() {
@@ -22,6 +22,7 @@ public class Server implements Runnable {
                 System.out.println("---- Socket recogido ----");
 
                 clientsConnection.add(new Connection(clientSocket));
+                new Thread(new SendAutobuses(clientSocket)).start();
             }
 
         } catch (IOException e) {
@@ -31,15 +32,52 @@ public class Server implements Runnable {
         }
     }
 
-    public static void broadcast(GeoPoint punto, Autobus autobus){
+
+    public static void broadcastAutobus(GeoPoint punto, Autobus autobus){
         for (Connection conexionCli : Server.clientsConnection) {
             try {
                 DataOutputStream remoteOut = new DataOutputStream(conexionCli.getSocket().getOutputStream());
-                System.out.println(autobus.getNombre() + " | " + punto.getLatitude() + ", " + punto.getLongitude());
-                remoteOut.writeUTF(autobus.getNombre() + " | " + punto.getLatitude() + ", " + punto.getLongitude());
+                System.out.println("movBus:" + autobus.getNombre() + " | " + punto.getLatitude() + ", " + punto.getLongitude());
+                remoteOut.writeUTF("movBus:" + autobus.getNombre() + " | " + punto.getLatitude() + ", " + punto.getLongitude());
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public class SendAutobuses implements Runnable {
+
+        private Socket socket;
+        private String msgCli = "";
+
+        public SendAutobuses(Socket socket){
+            this.socket = socket;
+        }
+
+        private void sendToNewClientAutobuses(){
+            for (Autobus autobus : Main.autobusesUp) {
+                try {
+                    DataOutputStream remoteOut = new DataOutputStream(this.socket.getOutputStream());
+                    GeoPoint punto = autobus.getPunto();
+                    System.out.println("posBus:" + autobus.getNombre() + " | " + punto.getLatitude() + ", " + punto.getLongitude());
+                    remoteOut.writeUTF("posBus:" + autobus.getNombre() + " | " + punto.getLatitude() + ", " + punto.getLongitude());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        public Socket getSocket() {
+            return socket;
+        }
+
+        public void setSocket(Socket socket) {
+            socket = socket;
+        }
+
+        @Override
+        public void run() {
+            sendToNewClientAutobuses();
         }
     }
 }

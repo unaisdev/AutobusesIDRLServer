@@ -31,9 +31,9 @@ public class Main extends Application {
         Linea lineaH25 = new Linea("LineaH-25");
         lineasUp.add(lineaH25);
 
-        Autobus autobusCHR = new Autobus("AutobusCHR", new GeoPoint(43.2456, 23.45559292), "infodrmacionnn");
+        Autobus autobusCHR = new Autobus("AutobusCHR", new GeoPoint(43.339814, -1.77657), "infodrmacionnn");
         autobusesUp.add(autobusCHR);
-        Autobus autobusKLR = new Autobus("AutobusKLR", new GeoPoint(232.23123123, 112.394701), "infodrmacionnn");
+        Autobus autobusKLR = new Autobus("AutobusKLR", new GeoPoint(43.379814, -1.68657), "infodrmacionnn");
         autobusesUp.add(autobusKLR);
 
         Scene scene = new Scene(root);

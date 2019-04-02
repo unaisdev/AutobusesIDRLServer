@@ -1,7 +1,3 @@
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.Socket;
-
 public class SimulacionBus implements Runnable{
 
     private Linea linea;
@@ -15,7 +11,7 @@ public class SimulacionBus implements Runnable{
     public void lanzarAutobus() {
         try {
             for (GeoPoint punto : linea.getPuntosRuta()) {
-                Server.broadcast(punto, autobus);
+                Server.broadcastAutobus(punto, autobus);
                 Thread.sleep(500);
             }
 
@@ -23,6 +19,12 @@ public class SimulacionBus implements Runnable{
             e.printStackTrace();
         }
 
+    }
+
+    public void mandarAutobuses(){
+        for (Autobus autobus: Main.autobusesUp) {
+
+        }
     }
 
     @Override

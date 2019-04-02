@@ -27,7 +27,8 @@ public class Connection implements Runnable {
                     try{
                         while (true){
                             String msg;
-                            while (!(msg = dataInputStream.readUTF()).equals("")) {
+                            while (
+                                    (msg = dataInputStream.readUTF()).equals("")) {
                                 //Guardamos lo que nos dice el cliente en variable global
 
                                 /* AQUÍ ES DONDE DEBEREMOS CONTROLAR LO QUE NOS LLEGA DESDE EL CLIENTE,
@@ -53,6 +54,7 @@ public class Connection implements Runnable {
             System.exit(1);
         }
     }
+
 
     public Socket getSocket() {
         return socket;
