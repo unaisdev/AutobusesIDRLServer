@@ -23,6 +23,7 @@ public class Server implements Runnable {
 
                 clientsConnection.add(new Connection(clientSocket));
                 new Thread(new SendAutobuses(clientSocket)).start();
+                new Thread(new SendLineas(clientSocket)).start();
             }
 
         } catch (IOException e) {
@@ -78,6 +79,39 @@ public class Server implements Runnable {
         @Override
         public void run() {
             sendToNewClientAutobuses();
+        }
+    }
+
+    public class SendLineas implements Runnable {
+
+        private Socket socket;
+
+        public SendLineas(Socket socket){
+            this.socket = socket;
+        }
+
+        private void sendToNewClientLineas(){
+            for (Linea linea : Main.lineasUp) {
+                try {
+                    ObjectOutputStream remoteOut = new ObjectOutputStream(this.socket.getOutputStream());
+                    remoteOut.writeObject(linea);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        public Socket getSocket() {
+            return socket;
+        }
+
+        public void setSocket(Socket socket) {
+            socket = socket;
+        }
+
+        @Override
+        public void run() {
+            sendToNewClientLineas();
         }
     }
 }

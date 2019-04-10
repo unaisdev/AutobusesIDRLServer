@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import org.json.*;
 
 public class Linea {
+    private String id;
     private String nombre;
+    private int color;
     private JSONArray horarios;
     public ArrayList<Parada> paradas;
     public ArrayList<GeoPoint> puntosRuta;
@@ -89,6 +91,46 @@ public class Linea {
 
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
+    public JSONArray getHorarios() {
+        return horarios;
+    }
+
+    public void setHorarios(JSONArray horarios) {
+        this.horarios = horarios;
+    }
+
+    public ArrayList<Parada> getParadas() {
+        return paradas;
+    }
+
+    public void setParadas(ArrayList<Parada> paradas) {
+        this.paradas = paradas;
+    }
+
+    public JSONObject getFileJson() {
+        return fileJson;
+    }
+
+    public void setFileJson(JSONObject fileJson) {
+        this.fileJson = fileJson;
+    }
+
     public String getNombre() {
         return nombre;
     }
@@ -103,5 +145,11 @@ public class Linea {
 
     public void setPuntosRuta(ArrayList<GeoPoint> puntosRuta) {
         this.puntosRuta = puntosRuta;
+    }
+
+    @Override
+    public String toString() {
+        return "Linea [id=" + id + ", nombre=" + nombre + ", "
+                + "]";
     }
 }
