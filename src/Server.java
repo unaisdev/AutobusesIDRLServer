@@ -3,6 +3,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import org.json.*;
+
 
 public class Server implements Runnable {
 
@@ -23,7 +25,7 @@ public class Server implements Runnable {
 
                 clientsConnection.add(new Connection(clientSocket));
                 new Thread(new SendAutobuses(clientSocket)).start();
-                new Thread(new SendLineas(clientSocket)).start();
+                //new Thread(new SendLineas(clientSocket)).start();
             }
 
         } catch (IOException e) {
@@ -39,7 +41,7 @@ public class Server implements Runnable {
             try {
                 DataOutputStream remoteOut = new DataOutputStream(conexionCli.getSocket().getOutputStream());
                 System.out.println("movBus:" + autobus.getNombre() + " | " + punto.getLatitude() + ", " + punto.getLongitude());
-                remoteOut.writeUTF("movBus:" + autobus.getNombre() + " | " + punto.getLatitude() + ", " + punto.getLongitude());
+                remoteOut.writeUTF("movBus:" + autobus.getNombre() + "| " + punto.getLatitude() + ", " + punto.getLongitude());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -61,7 +63,7 @@ public class Server implements Runnable {
                     DataOutputStream remoteOut = new DataOutputStream(this.socket.getOutputStream());
                     GeoPoint punto = autobus.getPunto();
                     System.out.println("posBus:" + autobus.getNombre() + " | " + punto.getLatitude() + ", " + punto.getLongitude());
-                    remoteOut.writeUTF("posBus:" + autobus.getNombre() + " | " + punto.getLatitude() + ", " + punto.getLongitude());
+                    remoteOut.writeUTF("posBus:" + autobus.getNombre() + "| " + punto.getLatitude() + ", " + punto.getLongitude());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -94,7 +96,7 @@ public class Server implements Runnable {
             for (Linea linea : Main.lineasUp) {
                 try {
                     ObjectOutputStream remoteOut = new ObjectOutputStream(this.socket.getOutputStream());
-                    remoteOut.writeObject(linea);
+                    remoteOut.writeObject(linea.getFileJson());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

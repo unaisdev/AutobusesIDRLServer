@@ -12,7 +12,7 @@ public class SimulacionBus implements Runnable{
         try {
             for (GeoPoint punto : linea.getPuntosRuta()) {
                 Server.broadcastAutobus(punto, autobus);
-                Thread.sleep(500);
+                Thread.sleep(1500);
             }
 
         } catch (InterruptedException e) {

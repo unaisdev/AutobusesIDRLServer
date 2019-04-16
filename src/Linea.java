@@ -13,7 +13,7 @@ public class Linea {
     public ArrayList<Parada> paradas;
     public ArrayList<GeoPoint> puntosRuta;
     private JSONObject fileJson;
-
+    private String jsonText;
 
     public Linea(String nombre) {
         paradas = new ArrayList<>();
@@ -36,6 +36,7 @@ public class Linea {
         boolean error = false;
         try{
             System.out.println(stringFile);
+            jsonText = stringFile;
             fileJson = new JSONObject(stringFile);
         }catch(Exception e){
             error = true;
@@ -89,6 +90,14 @@ public class Linea {
 
         }
 
+    }
+
+    public String getJsonText() {
+        return jsonText;
+    }
+
+    public void setJsonText(String jsonText) {
+        this.jsonText = jsonText;
     }
 
     public String getId() {
