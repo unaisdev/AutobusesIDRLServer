@@ -9,8 +9,8 @@ public class Linea {
     private String id;
     private String nombre;
     private int color;
-    private JSONArray horarios;
-    public ArrayList<Parada> paradas;
+    private JSONArray horarios;public ArrayList<Parada> paradas;
+
     public ArrayList<GeoPoint> puntosRuta;
     private JSONObject fileJson;
     private String jsonText;

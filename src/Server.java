@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.json.*;
 
+import javax.xml.crypto.Data;
+
 
 public class Server implements Runnable {
 
@@ -25,7 +27,7 @@ public class Server implements Runnable {
 
                 clientsConnection.add(new Connection(clientSocket));
                 new Thread(new SendAutobuses(clientSocket)).start();
-                //new Thread(new SendLineas(clientSocket)).start();
+                new Thread(new SendParadas(clientSocket)).start();
             }
 
         } catch (IOException e) {
@@ -96,10 +98,48 @@ public class Server implements Runnable {
             for (Linea linea : Main.lineasUp) {
                 try {
                     ObjectOutputStream remoteOut = new ObjectOutputStream(this.socket.getOutputStream());
+
                     remoteOut.writeObject(linea.getFileJson());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+        }
+
+        public Socket getSocket() {
+            return socket;
+        }
+
+        public void setSocket(Socket socket) {
+            socket = socket;
+        }
+
+        @Override
+        public void run() {
+            sendToNewClientLineas();
+        }
+    }
+
+    public class SendParadas implements Runnable {
+
+        private Socket socket;
+
+        public SendParadas(Socket socket){
+            this.socket = socket;
+        }
+
+        private void sendToNewClientLineas(){
+            for (Linea linea : Main.lineasUp) {
+                for(Parada parada: linea.getParadas()){
+                    try {
+                        DataOutputStream remoteOut = new DataOutputStream(this.socket.getOutputStream());
+                        System.out.print(parada.imprimirParada());
+                        remoteOut.writeUTF(parada.imprimirParada());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
             }
         }
 

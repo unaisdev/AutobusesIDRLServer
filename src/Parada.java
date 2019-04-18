@@ -36,4 +36,15 @@ public class Parada {
     public void setLineasAsociadas(ArrayList<String> lineasAsociadas) {
         this.lineasAsociadas = lineasAsociadas;
     }
+
+    public String imprimirParada(){
+        String paradaMsg = "posParada: " + nombre + "| " + geoPoint.getLatitude() + ", " + geoPoint.getLongitude() + "|";
+
+        for(String lineaAsociada: lineasAsociadas)
+            paradaMsg += lineaAsociada + ",";
+
+        paradaMsg.substring(0, paradaMsg.length()-2);
+
+        return paradaMsg;
+    }
 }

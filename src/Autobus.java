@@ -1,12 +1,22 @@
 public class Autobus {
     private String nombre;
+    private Boolean enUso;
     private GeoPoint punto;
     private String info;
 
-    public Autobus(String nombre, GeoPoint punto, String info) {
+    public Autobus(String nombre, GeoPoint punto, String info, Boolean enUso) {
         this.nombre = nombre;
         this.punto = punto;
         this.info = info;
+        this.enUso = enUso;
+    }
+
+    public Boolean getEnUso() {
+        return enUso;
+    }
+
+    public void setEnUso(Boolean enUso) {
+        this.enUso = enUso;
     }
 
     public String getNombre() {
