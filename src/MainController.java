@@ -1,10 +1,14 @@
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.stage.Stage;
 
 import java.io.*;
 import java.net.Socket;
@@ -118,5 +122,17 @@ public class MainController {
         }
 
         return selected;
+    }
+
+    public void abrirAlertas() throws IOException {
+        Stage primaryStage = new Stage();
+        Parent root = FXMLLoader.load(getClass().getResource("alerts.fxml"));
+
+        Scene scene = new Scene(root);
+
+        primaryStage.setTitle("Autobuses IDRL");
+        primaryStage.setResizable(false);
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 }

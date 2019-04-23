@@ -28,6 +28,7 @@ public class Server implements Runnable {
                 clientsConnection.add(new Connection(clientSocket));
                 new Thread(new SendAutobuses(clientSocket)).start();
                 new Thread(new SendParadas(clientSocket)).start();
+                //new Thread(new SendLineas(clientSocket)).start();
             }
 
         } catch (IOException e) {
@@ -44,6 +45,18 @@ public class Server implements Runnable {
                 DataOutputStream remoteOut = new DataOutputStream(conexionCli.getSocket().getOutputStream());
                 System.out.println("movBus:" + autobus.getNombre() + " | " + punto.getLatitude() + ", " + punto.getLongitude());
                 remoteOut.writeUTF("movBus:" + autobus.getNombre() + "| " + punto.getLatitude() + ", " + punto.getLongitude());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void mandarAlerta(String tipo, String titulo, String desc){
+        for (Connection conexionCli : Server.clientsConnection) {
+            try {
+                DataOutputStream remoteOut = new DataOutputStream(conexionCli.getSocket().getOutputStream());
+                System.out.println("alerta:" + tipo + titulo + "," + desc);
+                remoteOut.writeUTF("alerta:" + tipo + titulo + "," + desc);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -97,9 +110,8 @@ public class Server implements Runnable {
         private void sendToNewClientLineas(){
             for (Linea linea : Main.lineasUp) {
                 try {
-                    ObjectOutputStream remoteOut = new ObjectOutputStream(this.socket.getOutputStream());
-
-                    remoteOut.writeObject(linea.getFileJson());
+                    DataOutputStream remoteOut = new DataOutputStream(this.socket.getOutputStream());
+                    remoteOut.writeUTF("linea: " + linea.getJsonText());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
