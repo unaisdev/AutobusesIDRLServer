@@ -24,7 +24,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("Main.fxml"));
 
         //Linea lineaA15 = new Linea("LineaA-15");
         //lineasUp.add(lineaA15);

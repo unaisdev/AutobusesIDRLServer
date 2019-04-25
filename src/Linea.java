@@ -21,7 +21,7 @@ public class Linea {
         String stringFile = "";
 
         try{
-            File file = new File("C:/Users/Unai Canales/Desktop/AutobusesIDRLServer/rutes/" + nombre + ".json");
+            File file = new File("C:/Users/Seretide/IdeaProjects/AutobusesIDRLServer/rutes/" + nombre + ".json");
 
             BufferedReader br = new BufferedReader(new FileReader(file));
 

@@ -56,7 +56,7 @@ public class Server implements Runnable {
             try {
                 DataOutputStream remoteOut = new DataOutputStream(conexionCli.getSocket().getOutputStream());
                 System.out.println("alerta:" + tipo + titulo + "," + desc);
-                remoteOut.writeUTF("alerta:" + tipo + titulo + "," + desc);
+                remoteOut.writeUTF("alerta:" + tipo + ", " + titulo + "," + desc);
             } catch (IOException e) {
                 e.printStackTrace();
             }
