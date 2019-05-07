@@ -26,9 +26,9 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("Main.fxml"));
 
-        //Linea lineaA15 = new Linea("LineaA-15");
-        //lineasUp.add(lineaA15);
-        Linea lineaH25 = new Linea("LineaH-25_copy");
+        Linea lineaA15 = new Linea("LineaA-15", "#d00000");
+        lineasUp.add(lineaA15);
+        Linea lineaH25 = new Linea("LineaH-25", "#08124c");
         lineasUp.add(lineaH25);
 
         Autobus autobusCHR = new Autobus("AutobusCHR", new GeoPoint(43.339814, -1.77657), "infodrmacionnn", false);

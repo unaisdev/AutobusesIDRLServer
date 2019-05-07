@@ -27,14 +27,20 @@ public class Server implements Runnable {
 
                 clientsConnection.add(new Connection(clientSocket));
                 new Thread(new SendAutobuses(clientSocket)).start();
+                Thread.sleep(500);
                 new Thread(new SendParadas(clientSocket)).start();
-                //new Thread(new SendLineas(clientSocket)).start();
+                Thread.sleep(500);
+                new Thread(new SendLineas(clientSocket)).start();
+                Thread.sleep(500);
+
             }
 
         } catch (IOException e) {
             System.out.println("Exception caught when trying to listen on port "
                     + PORT_NUMBER + " or listening for a connection");
             System.out.println(e.getMessage());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -77,7 +83,6 @@ public class Server implements Runnable {
                 try {
                     DataOutputStream remoteOut = new DataOutputStream(this.socket.getOutputStream());
                     GeoPoint punto = autobus.getPunto();
-                    System.out.println("posBus:" + autobus.getNombre() + " | " + punto.getLatitude() + ", " + punto.getLongitude());
                     remoteOut.writeUTF("posBus:" + autobus.getNombre() + "| " + punto.getLatitude() + ", " + punto.getLongitude());
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -111,7 +116,9 @@ public class Server implements Runnable {
             for (Linea linea : Main.lineasUp) {
                 try {
                     DataOutputStream remoteOut = new DataOutputStream(this.socket.getOutputStream());
+
                     remoteOut.writeUTF("linea: " + linea.getJsonText());
+                    System.out.println("linea: " + linea.getJsonText());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -145,7 +152,6 @@ public class Server implements Runnable {
                 for(Parada parada: linea.getParadas()){
                     try {
                         DataOutputStream remoteOut = new DataOutputStream(this.socket.getOutputStream());
-                        System.out.print(parada.imprimirParada());
                         remoteOut.writeUTF(parada.imprimirParada());
                     } catch (IOException e) {
                         e.printStackTrace();

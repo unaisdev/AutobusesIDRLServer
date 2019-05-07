@@ -8,14 +8,16 @@ import org.json.*;
 public class Linea {
     private String id;
     private String nombre;
-    private int color;
-    private JSONArray horarios;public ArrayList<Parada> paradas;
-
+    private String color;
+    private JSONArray horarios;
+    public ArrayList<Parada> paradas;
     public ArrayList<GeoPoint> puntosRuta;
     private JSONObject fileJson;
-    private String jsonText;
+    private String jsonRouteText = "[";
 
-    public Linea(String nombre) {
+    public Linea(String nombre, String color) {
+        this.nombre = nombre;
+        this.color = color;
         paradas = new ArrayList<>();
         puntosRuta = new ArrayList<>();
         String stringFile = "";
@@ -36,7 +38,6 @@ public class Linea {
         boolean error = false;
         try{
             System.out.println(stringFile);
-            jsonText = stringFile;
             fileJson = new JSONObject(stringFile);
         }catch(Exception e){
             error = true;
@@ -57,14 +58,21 @@ public class Linea {
             //Recogemos los objetos del Array que son CADA PUNTO de la ruta y lo guardamos en el ArrayList
             JSONArray ruta = fileJson.getJSONObject("ruta").getJSONArray("puntos");
 
+            jsonRouteText = nombre + "," + color + "," + jsonRouteText;
+
             for (int i = 0; i < ruta.length(); i++)
             {
                 double latitude = ruta.getJSONObject(i).getDouble("_lat");
                 double longitude = ruta.getJSONObject(i).getDouble("_lon");
 
+                jsonRouteText = jsonRouteText +  "{'_lat': '" + latitude + "', '_lon':'" + longitude + "'},";
+
                 GeoPoint nuevoPunto = new GeoPoint(latitude, longitude);
                 puntosRuta.add(nuevoPunto);
             }
+
+            jsonRouteText = jsonRouteText.substring(0, jsonRouteText.length() -1);
+            jsonRouteText += "]";
 
             JSONArray arrParada = fileJson.getJSONArray("paradas");
 
@@ -88,16 +96,18 @@ public class Linea {
                 paradas.add(nuevaParada);
             }
 
+
+
         }
 
     }
 
     public String getJsonText() {
-        return jsonText;
+        return jsonRouteText;
     }
 
     public void setJsonText(String jsonText) {
-        this.jsonText = jsonText;
+        this.jsonRouteText = jsonText;
     }
 
     public String getId() {
@@ -108,11 +118,11 @@ public class Linea {
         this.id = id;
     }
 
-    public int getColor() {
+    public String getColor() {
         return color;
     }
 
-    public void setColor(int color) {
+    public void setColor(String color) {
         this.color = color;
     }
 
