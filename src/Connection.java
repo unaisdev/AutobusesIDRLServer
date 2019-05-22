@@ -32,11 +32,8 @@ public class Connection implements Runnable {
                                 //Guardamos lo que nos dice el cliente en variable global
 
                                 /* AQUÍ ES DONDE DEBEREMOS CONTROLAR LO QUE NOS LLEGA DESDE EL CLIENTE,
-                                 * QUE NOS PEDIRÁ: PARADAS, RUTAS, Y AUTOBUSES.
-                                 * Y deberemos de crear un nuevo hilo para que se ejecute en segundo plano el envio de
-                                 * coordenadas a los clientes.
+                                 * AUNQUE EN ESTE CASO NO DEBEREMOS DE UTILIZAR
                                  *
-                                 * EL HILO QUE SE ENCARGUE DE ENVIAR MENSAJES, debe ser accionado por un boton en la interfaz JavaFX
                                  * */
 
                                 msgCli = msg;
@@ -68,4 +65,71 @@ public class Connection implements Runnable {
     public void run() {
         connectClient();
     }
+
+    public void sendToNewClientAutobuses(){
+        for (Autobus autobus : Main.autobusesUp) {
+            try {
+                DataOutputStream remoteOut = new DataOutputStream(this.socket.getOutputStream());
+                GeoPoint punto = autobus.getPunto();
+                remoteOut.writeUTF("posBus:" + autobus.getNombre() + "| " + punto.getLatitude() + ", " + punto.getLongitude());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void sendToNewClientLineas(){
+        for (Linea linea : Main.lineasUp) {
+            try {
+                DataOutputStream remoteOut = new DataOutputStream(this.socket.getOutputStream());
+
+                remoteOut.writeUTF("linea: " + linea.getJsonText());
+                System.out.println("linea: " + linea.getJsonText());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void sendToNewClientParadas(){
+        for (Linea linea : Main.lineasUp) {
+            for(Parada parada: linea.getParadas()){
+                try {
+                    DataOutputStream remoteOut = new DataOutputStream(this.socket.getOutputStream());
+                    remoteOut.writeUTF(parada.imprimirParada());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+    }
+
+
+    public static void broadcastAutobus(GeoPoint punto, Autobus autobus){
+        for (Connection conexionCli : Server.clientsConnection) {
+            try {
+                DataOutputStream remoteOut = new DataOutputStream(conexionCli.getSocket().getOutputStream());
+                System.out.println("movBus:" + autobus.getNombre() + " | " + punto.getLatitude() + ", " + punto.getLongitude());
+                remoteOut.writeUTF("movBus:" + autobus.getNombre() + "| " + punto.getLatitude() + ", " + punto.getLongitude());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void mandarAlerta(String tipo, String titulo, String desc){
+        for (Connection conexionCli : Server.clientsConnection) {
+            try {
+                DataOutputStream remoteOut = new DataOutputStream(conexionCli.getSocket().getOutputStream());
+                System.out.println("alerta:" + tipo + titulo + "," + desc);
+                remoteOut.writeUTF("alerta:" + tipo + ", " + titulo + "," + desc);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
 }

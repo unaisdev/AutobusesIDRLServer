@@ -48,7 +48,7 @@ public class AlertAndroid {
         else if(cBTipo.getSelectionModel().isSelected(3))
             tipo = "Averia";
 
-        Server.mandarAlerta(tipo, tBTitulo.getText(), tADesc.getText());
+        Connection.mandarAlerta(tipo, tBTitulo.getText(), tADesc.getText());
     }
 
 

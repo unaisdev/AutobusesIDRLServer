@@ -25,12 +25,13 @@ public class Server implements Runnable {
 
                 System.out.println("---- Socket recogido ----");
 
-                clientsConnection.add(new Connection(clientSocket));
-                new Thread(new SendAutobuses(clientSocket)).start();
+                Connection conn = new Connection(clientSocket);
+                clientsConnection.add(conn);
+                conn.sendToNewClientAutobuses();
                 Thread.sleep(500);
-                new Thread(new SendParadas(clientSocket)).start();
+                conn.sendToNewClientLineas();
                 Thread.sleep(500);
-                new Thread(new SendLineas(clientSocket)).start();
+                conn.sendToNewClientParadas();
                 Thread.sleep(500);
 
             }
@@ -41,137 +42,6 @@ public class Server implements Runnable {
             System.out.println(e.getMessage());
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
-    }
-
-
-    public static void broadcastAutobus(GeoPoint punto, Autobus autobus){
-        for (Connection conexionCli : Server.clientsConnection) {
-            try {
-                DataOutputStream remoteOut = new DataOutputStream(conexionCli.getSocket().getOutputStream());
-                System.out.println("movBus:" + autobus.getNombre() + " | " + punto.getLatitude() + ", " + punto.getLongitude());
-                remoteOut.writeUTF("movBus:" + autobus.getNombre() + "| " + punto.getLatitude() + ", " + punto.getLongitude());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public static void mandarAlerta(String tipo, String titulo, String desc){
-        for (Connection conexionCli : Server.clientsConnection) {
-            try {
-                DataOutputStream remoteOut = new DataOutputStream(conexionCli.getSocket().getOutputStream());
-                System.out.println("alerta:" + tipo + titulo + "," + desc);
-                remoteOut.writeUTF("alerta:" + tipo + ", " + titulo + "," + desc);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public class SendAutobuses implements Runnable {
-
-        private Socket socket;
-        private String msgCli = "";
-
-        public SendAutobuses(Socket socket){
-            this.socket = socket;
-        }
-
-        private void sendToNewClientAutobuses(){
-            for (Autobus autobus : Main.autobusesUp) {
-                try {
-                    DataOutputStream remoteOut = new DataOutputStream(this.socket.getOutputStream());
-                    GeoPoint punto = autobus.getPunto();
-                    remoteOut.writeUTF("posBus:" + autobus.getNombre() + "| " + punto.getLatitude() + ", " + punto.getLongitude());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        public Socket getSocket() {
-            return socket;
-        }
-
-        public void setSocket(Socket socket) {
-            socket = socket;
-        }
-
-        @Override
-        public void run() {
-            sendToNewClientAutobuses();
-        }
-    }
-
-    public class SendLineas implements Runnable {
-
-        private Socket socket;
-
-        public SendLineas(Socket socket){
-            this.socket = socket;
-        }
-
-        private void sendToNewClientLineas(){
-            for (Linea linea : Main.lineasUp) {
-                try {
-                    DataOutputStream remoteOut = new DataOutputStream(this.socket.getOutputStream());
-
-                    remoteOut.writeUTF("linea: " + linea.getJsonText());
-                    System.out.println("linea: " + linea.getJsonText());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        public Socket getSocket() {
-            return socket;
-        }
-
-        public void setSocket(Socket socket) {
-            socket = socket;
-        }
-
-        @Override
-        public void run() {
-            sendToNewClientLineas();
-        }
-    }
-
-    public class SendParadas implements Runnable {
-
-        private Socket socket;
-
-        public SendParadas(Socket socket){
-            this.socket = socket;
-        }
-
-        private void sendToNewClientLineas(){
-            for (Linea linea : Main.lineasUp) {
-                for(Parada parada: linea.getParadas()){
-                    try {
-                        DataOutputStream remoteOut = new DataOutputStream(this.socket.getOutputStream());
-                        remoteOut.writeUTF(parada.imprimirParada());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-            }
-        }
-
-        public Socket getSocket() {
-            return socket;
-        }
-
-        public void setSocket(Socket socket) {
-            socket = socket;
-        }
-
-        @Override
-        public void run() {
-            sendToNewClientLineas();
         }
     }
 }
