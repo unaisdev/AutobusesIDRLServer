@@ -27,21 +27,15 @@ public class Server implements Runnable {
 
                 Connection conn = new Connection(clientSocket);
                 clientsConnection.add(conn);
-                conn.sendToNewClientAutobuses();
-                Thread.sleep(500);
-                conn.sendToNewClientLineas();
-                Thread.sleep(500);
-                conn.sendToNewClientParadas();
-                Thread.sleep(500);
-
+                new Thread(conn).start();
             }
 
         } catch (IOException e) {
             System.out.println("Exception caught when trying to listen on port "
                     + PORT_NUMBER + " or listening for a connection");
             System.out.println(e.getMessage());
-        } catch (InterruptedException e) {
+        } /*catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 }

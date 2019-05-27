@@ -77,33 +77,6 @@ public class MainController {
         });
     }
 
-    @FXML
-    private void lanzarAutobus()
-    {
-        System.out.println("BOTON PULSAO");
-
-        for (Linea linea: Main.lineasUp) {
-            if(linea.getNombre().equals(tGLineas.getSelectedToggle().getUserData().toString())){
-                for (Autobus autobus: Main.autobusesUp) {
-                    if(!autobus.getEnUso()){
-                        if(autobus.getNombre().equals(tGAutobuses.getSelectedToggle().getUserData().toString())){
-                            new Thread(new SimulacionBus(linea, autobus)).start();
-                            autobus.setEnUso(true);
-                        }else{
-                            //TODO: TRATAMOS CUANDO EL AUTOBUS NO EXISTE EN EL ARRAY
-
-                        }
-                    }else{
-                        //TODO: TRATAR CUANDO EL AUTOBUS YA ESTA EN MOVIMIENTO
-                    }
-
-                }
-            }else{
-                //TODO: TRATAMOS CUANDO LA LINEA NO EXISTE EN EL ARRAY
-            }
-        }
-    }
-
     private String getSelectedLineaAutobus(){
         String selected = "";
 
